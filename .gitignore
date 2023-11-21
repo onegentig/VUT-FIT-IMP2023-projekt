@@ -1,0 +1,21 @@
+# Temporary files and binaries
+temp**
+**.o
+**.exe
+
+# Testing files
+test**.**
+is_it_ok.sh
+testdir/**
+
+# Tools and utils
+vhdl-tool**
+options
+licence**
+
+# Other
+**-private**
+**.odt
+**.zip
+**.tar.gz
+**x???????**
