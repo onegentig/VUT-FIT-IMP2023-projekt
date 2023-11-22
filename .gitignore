@@ -1,21 +1,83 @@
-# Temporary files and binaries
-temp**
-**.o
-**.exe
+# Created by https://www.toptal.com/developers/gitignore/api/platformio,c,espresso
+# Edit at https://www.toptal.com/developers/gitignore?templates=platformio,c,espresso
 
-# Testing files
-test**.**
-is_it_ok.sh
-testdir/**
+### C ###
+# Prerequisites
+*.d
 
-# Tools and utils
-vhdl-tool**
-options
-licence**
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
 
-# Other
-**-private**
-**.odt
-**.zip
-**.tar.gz
-**x???????**
+# Linker output
+*.ilk
+*.map
+*.exp
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Kernel Module Compile Results
+*.mod*
+*.cmd
+.tmp_versions/
+modules.order
+Module.symvers
+Mkfile.old
+dkms.conf
+
+### Espresso ###
+*.esproj
+
+# VSCode
+.vscode/.browse.c_cpp.db*
+.vscode/launch.json
+.vscode/ipch
+
+### PlatformIO ###
+.pioenvs
+.piolibdeps
+.clang_complete
+.gcc-flags.json
+.pio
+
+# End of https://www.toptal.com/developers/gitignore/api/platformio,c,espresso
+
+# Placeholder READMEs
+include/README
+lib/README
+test/README
+
+# Presentations
+
+ESP32-Wemos-D1-R32.pdf
+Wemos_D1_R32_notes.pdf

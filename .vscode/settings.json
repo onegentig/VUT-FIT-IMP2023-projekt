@@ -1,8 +1,3 @@
 {
-	"deepscan.enable": true,
-	"editor.tabSize": 5,
-	"editor.insertSpaces": true,
-	"editor.detectIndentation": true,
-	"telemetry.enableTelemetry": false,
-	"conventionalCommits.scopes": []
+     "cmake.configureOnOpen": true
 }
