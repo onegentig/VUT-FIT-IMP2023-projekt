@@ -5,13 +5,15 @@
  * @date 2023-11-22
  */
 
+#ifndef IMPLIGHT_MAIN_H
+#define IMPLIGHT_MAIN_H
+
 /* === Importy === */
 
 #include "common.h"
+#include "led.h"
 
 /* === Definície a globals === */
-
-#define BLINK_PORT GPIO_NUM_5
 
 /* === Metódy === */
 
@@ -27,3 +29,5 @@ void app_main(void) {
           loop();
      }
 }
+
+#endif

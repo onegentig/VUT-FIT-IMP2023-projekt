@@ -4,6 +4,9 @@
  * @brief Hlavičkový súbor pre zdieľané importy a definície
  */
 
+#ifndef IMPLIGHT_COMMON_H
+#define IMPLIGHT_COMMON_H
+
 /* === Importy === */
 
 #include <stdbool.h>
@@ -16,6 +19,8 @@
 
 /* === Definície === */
 
+extern const char *PROJNAME;
+
 /* == Časové konštanty == */
 // inšpirované npm modulom "@sapphire/time-utilities"
 
@@ -24,6 +29,4 @@
 #define TIME_MINUTE (60 * TIME_SECOND)
 #define TIME_HOUR (60 * TIME_MINUTE)
 
-/* === Konštanty === */
-
-const char *PROJNAME = "imp-light";
+#endif

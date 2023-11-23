@@ -9,20 +9,22 @@
 
 /* === Globals === */
 
-bool led_state = true;
+const char* PROJNAME = "imp-light";
 
-/* === Hlavné metódy === */
+/* === Metódy === */
+
+/* == Hlavné metódy == */
 
 void setup() {
-     gpio_reset_pin(BLINK_PORT);
-     gpio_set_direction(BLINK_PORT, GPIO_MODE_OUTPUT);
+     init_led();
 
      ESP_LOGI(PROJNAME, "Hardvér inicializovaný!");
 }
 
 void loop() {
-     ESP_LOGI(PROJNAME, "%s LEDku!", led_state == true ? "ZAPÍNAM" : "VYPÍNAM");
-     gpio_set_level(BLINK_PORT, led_state);
-     vTaskDelay(1000 / portTICK_PERIOD_MS);
-     led_state = !led_state;
+     ESP_LOGI(PROJNAME, "Pomaly zapínam LEDku...");
+     fade_led_bright(100);
+
+     ESP_LOGI(PROJNAME, "Pomaly vypínam LEDku...");
+     fade_led_bright(0);
 }
