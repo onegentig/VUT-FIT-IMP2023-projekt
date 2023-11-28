@@ -12,6 +12,7 @@
 
 #include "common.h"
 #include "led.h"
+#include "sensor.h"
 
 /* === Definície a globals === */
 
