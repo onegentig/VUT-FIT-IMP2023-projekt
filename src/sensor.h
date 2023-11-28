@@ -27,6 +27,9 @@
 #define BH1750FVI_ONE_HRES2 0x21   /**< Kód inštr. pre alt. jednorázový režim s vysokým rozl. */
 #define BH1750FVI_ONE_LRES 0x23	/**< Kód inštr. pre jednorázový režim s nízkym rozl. */
 
+#define MIN_LUX 10     /**< Minimálna úroveň svetla (pod => 0%) */
+#define MAX_LUX 1000   /**< Maximálna úroveň svetla (nad => 100%) */
+
 /* === Metódy === */
 
 /**
@@ -47,8 +50,14 @@ bool test_sensor();
 /**
  * @brief Prečíta úroveň svetla z senzora
  * @see https://www.laskakit.cz/user/related_files/bh1750fvi-e-186247.pdf#page=5
- * @return uint16_t Úroveň svetla, NULL ak sa nepodarilo prečítať
+ * @return uint16_t Úroveň svetla v luxoch
  */
 uint16_t read_sensor_light();
+
+/**
+ * @brief Prekonvertuje úroveň svetla na percentá
+ * @return uint8_t Úroveň svetla v percentách
+ */
+uint8_t lux_to_pct(uint16_t lux);
 
 #endif

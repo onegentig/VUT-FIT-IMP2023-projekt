@@ -46,13 +46,9 @@ void setup() {
 }
 
 void loop() {
-     // ESP_LOGI(PROJNAME, "Pomaly zapínam LEDku...");
-     fade_led_bright(100);
-
-     ESP_LOGI(PROJNAME, "Čítam úroveň svetla...");
-     uint16_t light_level = read_sensor_light();
-     ESP_LOGI(PROJNAME, "Úroveň svetla: %u lux", light_level);
-
-     // ESP_LOGI(PROJNAME, "Pomaly vypínam LEDku...");
-     fade_led_bright(0);
+     uint16_t light_lux = read_sensor_light();
+     uint8_t light_pct = lux_to_pct(light_lux);
+     ESP_LOGI(PROJNAME, "Úroveň svetla: %u lux (%u%%)", light_lux, light_pct);
+     fade_led_bright(light_pct);
+     vTaskDelay(500 / portTICK_PERIOD_MS);
 }

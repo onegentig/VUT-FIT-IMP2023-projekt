@@ -9,6 +9,7 @@
 
 /* === Importy === */
 
+#include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
 

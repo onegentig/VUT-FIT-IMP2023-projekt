@@ -68,7 +68,7 @@ bool test_sensor() {
 /**
  * @brief Prečíta úroveň svetla z senzora
  * @see https://www.laskakit.cz/user/related_files/bh1750fvi-e-186247.pdf#page=5
- * @return uint16_t Úroveň svetla, NULL ak sa nepodarilo prečítať
+ * @return uint16_t Úroveň svetla
  */
 uint16_t read_sensor_light() {
      uint8_t data_h, data_l;  // BH1750FVI posiela 16b úroveň svetla po dvoch 8b
@@ -78,15 +78,15 @@ uint16_t read_sensor_light() {
      i2c_cmd_handle_t cmd = i2c_cmd_link_create();
      if (cmd == NULL) {
           ESP_LOGE(PROJNAME, "Chyba (cmd == NULL) pri vytváraní I²C linky!");
-          return false;
+          return 0;
      }
 
      /* Sekvencia príkazov */
      i2c_master_start(cmd);  // Začiatok komunikácie
      i2c_master_write_byte(cmd, (I2C_SENSOR_ADDR << 1) | I2C_MASTER_READ,
                            true);  // MASTER_READ z adresy
-     i2c_master_read_byte(cmd, &data_h, I2C_MASTER_ACK);   // High byte
-     i2c_master_read_byte(cmd, &data_l, I2C_MASTER_NACK);  // Low byte
+     i2c_master_read_byte(cmd, &data_h, I2C_MASTER_ACK);        // High byte
+     i2c_master_read_byte(cmd, &data_l, I2C_MASTER_LAST_NACK);  // Low byte
      i2c_master_stop(cmd);  // Koniec komunikácie
 
      /* Spustenie príkazov */
@@ -95,8 +95,23 @@ uint16_t read_sensor_light() {
 
      if (status != ESP_OK) {
           ESP_LOGE(PROJNAME, "Chyba pri čítaní úrovne svetla!");
-          return NULL;
+          return 0;
      }
 
      return ((data_h << 8) | data_l);
+}
+
+/**
+ * @brief Prekonvertuje úroveň svetla na percentá
+ * @return uint8_t Úroveň svetla v percentách
+ */
+uint8_t lux_to_pct(uint16_t lux) {
+     if (lux <= MIN_LUX) return 100;
+     if (lux >= MAX_LUX) return 0;
+
+     // Logarithmické mapovanie
+     float lux_norm = (float)(lux - MIN_LUX) / (MAX_LUX - MIN_LUX);
+     float lux_log = log(lux_norm * (M_E - 1) + 1);
+     uint8_t lux_pct = 100 * lux_log;
+     return 100 - lux_pct;
 }

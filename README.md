@@ -7,7 +7,7 @@
 <!-- ⚠️ **Zverejnené pre archívne účely — nekopírujte, nula by Vás mrzela. Za nič také nenesiem žiadnu zodpovednosť!** Všetky odovzdané projekty prechádzajú kontrolou plagiátorstva, pri ktorej sa porovnávajú aj s dávnejšie odovzdanými riešeniami. -->
 <br />
 
-Hodnotenie: ?? / ??<br />（?）
+Hodnotenie: ?? / 14<br />（?）
 
 Zadanie: [ZADANI.md](ZADANI.md), originál [WIS WIKI/MOODLE/StudIS PDF/GitFIT/...](https://www.vut.cz/)
 
@@ -16,8 +16,8 @@ Zadanie: [ZADANI.md](ZADANI.md), originál [WIS WIKI/MOODLE/StudIS PDF/GitFIT/..
 - [X] ⏰ 2023-10-02 **Zadanie**
 - [X] ⏰ 2023-10-06 **Registrácia**
 - [X] Spojazniť IDE s ESP-IDF, rozblikať LEDku
-- [ ] Linearizácia zmeny svitu LEDky
-- [ ] Integrácia senzora svetla
+- [X] Linearizácia zmeny svitu LEDky
+- [X] Integrácia senzora svetla
 - [ ] NVS modul
 - [ ] MQTT
 - [ ] Sériová konfigurácia
