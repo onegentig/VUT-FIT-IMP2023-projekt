@@ -111,7 +111,7 @@ uint8_t lux_to_pct(uint16_t lux) {
 
      // Logarithmické mapovanie
      float lux_norm = (float)(lux - MIN_LUX) / (MAX_LUX - MIN_LUX);
-     float lux_log = log(lux_norm * (M_E - 1) + 1);
+     float lux_log = log2f(lux_norm * (M_E - 1) + 1);
      uint8_t lux_pct = 100 * lux_log;
      return 100 - lux_pct;
 }
