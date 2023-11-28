@@ -48,8 +48,8 @@ void init_led() {
          .duty = 0,
      };
 
-     ledc_timer_config(&led_timer_data);
-     ledc_channel_config(&led_channel_data);
+     ESP_ERROR_CHECK(ledc_timer_config(&led_timer_data));
+     ESP_ERROR_CHECK(ledc_channel_config(&led_channel_data));
 }
 
 /**
