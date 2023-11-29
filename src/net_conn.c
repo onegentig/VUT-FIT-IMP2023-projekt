@@ -7,6 +7,11 @@
 
 #include "net_conn.h"
 
+/* === Globals === */
+
+bool is_mqtt_connected = false;
+esp_mqtt_client_handle_t mqtt_client = NULL;
+
 /* === Metódy === */
 
 /**
@@ -40,6 +45,65 @@ void init_wifi() {
 }
 
 /**
+ * @brief Init MQTT pripojenia
+ */
+void init_mqtt() {
+     esp_mqtt_client_config_t mqtt_cfg = {
+         .broker.address.uri = MQTT_HOST,
+     };
+
+     mqtt_client = esp_mqtt_client_init(&mqtt_cfg);
+     if (mqtt_client == NULL) {
+          ESP_LOGE(PROJNAME, "Chyba pri inicializácii MQTT klienta!");
+          return;
+     }
+
+     esp_mqtt_client_register_event(mqtt_client, ESP_EVENT_ANY_ID, mqtt_handler,
+                                    mqtt_client);
+     esp_mqtt_client_start(mqtt_client);
+}
+
+/**
+ * @brief Odoslanie stavu LED na MQTT xkrame00/imp-light/led
+ * @param pct Svietivosť LED v %
+ * @param duty 10b strieda LEDky
+ */
+void mqtt_send_led(uint8_t pct, uint32_t duty) {
+     if (!is_mqtt_connected) {
+          return;
+     }
+
+     char topic[64];  // xkrame00/imp-light/led
+     snprintf(topic, sizeof(topic), "%sled", MQTT_TOPIC);
+
+     char msg[100];
+     snprintf(msg, sizeof(msg), "{\"brightness\": %u, \"duty\": %lu}", pct,
+              duty);
+
+     esp_mqtt_client_publish(mqtt_client, topic, msg, 0, 1, 0);
+}
+
+/**
+ * @brief Odoslanie stavu senzora na MQTT xkrame00/imp-light/sensor
+ * @param lux Úroveň svetla v luxoch
+ */
+void mqtt_send_sensor(uint16_t lux) {
+     if (!is_mqtt_connected) {
+          return;
+     }
+
+     char topic[64];  // xkrame00/imp-light/sensor
+     snprintf(topic, sizeof(topic), "%ssensor", MQTT_TOPIC);
+
+     char msg[100];
+     snprintf(msg, sizeof(msg), "{\"lux\": %u}", lux);
+
+     esp_mqtt_client_publish(mqtt_client, topic, msg, 0, 1, 0);
+}
+
+/* == Handlery == */
+
+/**
  * @brief Event handler pre WiFi eventy
  * @param arg Argumenty eventu
  * @param event_base Základ eventu
@@ -47,7 +111,7 @@ void init_wifi() {
  * @param event_data Dáta eventu
  */
 void wifi_handler(void *arg, esp_event_base_t event_base, int32_t event_id,
-                       void *event_data) {
+                  void *event_data) {
      switch (event_id) {
           case WIFI_EVENT_STA_START:
                ESP_LOGI(PROJNAME, "Pripájam sa...");
@@ -60,7 +124,7 @@ void wifi_handler(void *arg, esp_event_base_t event_base, int32_t event_id,
 
           case IP_EVENT_STA_GOT_IP:
                ESP_LOGI(PROJNAME, "IP pridelená, zapínam MQTT...");
-               // mqtt_start();
+               init_mqtt();
                break;
 
           case WIFI_EVENT_STA_DISCONNECTED:
@@ -73,4 +137,31 @@ void wifi_handler(void *arg, esp_event_base_t event_base, int32_t event_id,
      }
 }
 
-/** @see https://github.com/ESP32Tutorials/esp32-mqtt-pub-sub-esp-idf */
+/**
+ * @brief Event handler pre MQTT eventy
+ * @param handler_args Argumenty handlera
+ * @param event_base Základ eventu
+ * @param event_id ID eventu
+ * @param event_data Dáta eventu
+ */
+void mqtt_handler(void *handler_args, esp_event_base_t base, int32_t event_id,
+                  void *event_data) {
+     switch (event_id) {
+          case MQTT_EVENT_CONNECTED:
+               ESP_LOGI(PROJNAME, "MQTT: Pripojený!");
+               is_mqtt_connected = true;
+               break;
+
+          case MQTT_EVENT_DISCONNECTED:
+               ESP_LOGI(PROJNAME, "MQTT: Odpojený!");
+               is_mqtt_connected = false;
+               break;
+
+          case MQTT_EVENT_ERROR:
+               ESP_LOGI(PROJNAME, "MQTT: Došlo k nejakej chybe!");
+               break;
+
+          default:
+               break;
+     }
+}
