@@ -11,6 +11,7 @@
 /* === Importy === */
 
 #include "common.h"
+#include "net_conn.h"
 
 /* === Definície a globals === */
 

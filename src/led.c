@@ -96,4 +96,9 @@ void fade_led_bright(uint8_t percent) {
           set_led_bright(pct_to_duty(current_pct));
           vTaskDelay(t_step / portTICK_PERIOD_MS);
      }
+
+     /* MQTT update */
+     if (is_mqtt_connected) {
+          mqtt_send_led(current_pct, led_bright);
+     }
 }

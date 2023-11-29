@@ -12,6 +12,7 @@
 
 #include "common.h"
 #include "driver/ledc.h"
+#include "net_conn.h"
 
 /* === Definície a globals === */
 
