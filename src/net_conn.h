@@ -21,7 +21,7 @@
 #define NET_SSID "onegen-uy.23"
 #define NET_PASS "kreativne-heslo"
 #define MQTT_HOST "mqtt://broker.hivemq.com:1883"
-#define MQTT_TOPIC "xkrame00/imp-light/"
+#define MQTT_TOPIC "xkrame00/"
 
 extern bool is_mqtt_connected;
 extern esp_mqtt_client_handle_t mqtt_client;

@@ -17,7 +17,7 @@
 /* === Definície a globals === */
 
 #define PORT_LED GPIO_NUM_5
-#define LED_RAMPUP_TIME (int)(1.5 * 1000)  // Čas prechodu z 0% na 100% v ms
+#define LED_RAMPUP_TIME (int)(3 * 1000)  // Čas prechodu z 0% na 100% v ms
 
 extern uint32_t led_bright;
 

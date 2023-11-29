@@ -9,7 +9,7 @@
 
 /* === Globals === */
 
-const char* PROJNAME = "imp-light";
+const char* PROJNAME = "implight";
 
 /* === Metódy === */
 
@@ -17,7 +17,13 @@ const char* PROJNAME = "imp-light";
 
 void setup() {
      /* Inicializácia NVC */
-     ESP_ERROR_CHECK(nvs_flash_init());
+     esp_err_t nvs_status = nvs_flash_init();
+     if (nvs_status == ESP_ERR_NVS_NO_FREE_PAGES ||
+         nvs_status == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+          ESP_ERROR_CHECK(nvs_flash_erase());
+          nvs_status = nvs_flash_init();
+     }
+     ESP_ERROR_CHECK(nvs_status);
 
      /* Inicializácia I²C kontroléra */
      i2c_config_t i2c_ctrl_cfg = {

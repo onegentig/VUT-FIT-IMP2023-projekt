@@ -18,8 +18,8 @@ Zadanie: [ZADANI.md](ZADANI.md), originál [WIS WIKI/MOODLE/StudIS PDF/GitFIT/..
 - [X] Spojazniť IDE s ESP-IDF, rozblikať LEDku
 - [X] Linearizácia zmeny svitu LEDky
 - [X] Integrácia senzora svetla
-- [ ] NVS modul
-- [ ] MQTT
+- [X] NVS modul
+- [X] MQTT
 - [ ] Sériová konfigurácia
 - [ ] Webserver
 - [ ] ⏰ 2023-12-15 **Deadline**

@@ -73,13 +73,16 @@ void mqtt_send_led(uint8_t pct, uint32_t duty) {
           return;
      }
 
-     char topic[64];  // xkrame00/imp-light/led
-     snprintf(topic, sizeof(topic), "%sled", MQTT_TOPIC);
+     char topic[64], msg[100];
 
-     char msg[100];
-     snprintf(msg, sizeof(msg), "{\"brightness\": %u, \"duty\": %lu}", pct,
-              duty);
+     // xkrame00/led/brightness (aktuálna svietivosť LED v %)
+     snprintf(topic, sizeof(topic), "%sled/brightness", MQTT_TOPIC);
+     snprintf(msg, sizeof(msg), "%u", pct);
+     esp_mqtt_client_publish(mqtt_client, topic, msg, 0, 1, 0);
 
+     // xkrame00/led/duty (aktuálna strieda LED)
+     snprintf(topic, sizeof(topic), "%sled/duty", MQTT_TOPIC);
+     snprintf(msg, sizeof(msg), "%lu", duty);
      esp_mqtt_client_publish(mqtt_client, topic, msg, 0, 1, 0);
 }
 
@@ -92,12 +95,11 @@ void mqtt_send_sensor(uint16_t lux) {
           return;
      }
 
-     char topic[64];  // xkrame00/imp-light/sensor
+     char topic[64], msg[100];
+
+     // xkrame00/sensor (aktuálna úroveň svetla v luxoch)
      snprintf(topic, sizeof(topic), "%ssensor", MQTT_TOPIC);
-
-     char msg[100];
-     snprintf(msg, sizeof(msg), "{\"lux\": %u}", lux);
-
+     snprintf(msg, sizeof(msg), "%u", lux);
      esp_mqtt_client_publish(mqtt_client, topic, msg, 0, 1, 0);
 }
 
@@ -155,10 +157,6 @@ void mqtt_handler(void *handler_args, esp_event_base_t base, int32_t event_id,
           case MQTT_EVENT_DISCONNECTED:
                ESP_LOGI(PROJNAME, "MQTT: Odpojený!");
                is_mqtt_connected = false;
-               break;
-
-          case MQTT_EVENT_ERROR:
-               ESP_LOGI(PROJNAME, "MQTT: Došlo k nejakej chybe!");
                break;
 
           default:

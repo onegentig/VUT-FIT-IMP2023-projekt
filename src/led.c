@@ -19,6 +19,7 @@ uint32_t led_bright = 0;
 void init_led() {
      gpio_reset_pin(PORT_LED);
      gpio_set_direction(PORT_LED, GPIO_MODE_OUTPUT);
+     gpio_set_level(PORT_LED, 0);
 
      ledc_timer_config_t led_timer_data = {
          // Rýchly mód (hsch) => rýchla aplikácia zmeny
@@ -88,17 +89,20 @@ uint8_t duty_to_pct(uint32_t duty) {
  */
 void fade_led_bright(uint8_t percent) {
      uint8_t current_pct = duty_to_pct(led_bright);
-     uint8_t step = (current_pct > percent) ? -1 : 1;
-     int t_step = LED_RAMPUP_TIME / 100;
+     uint8_t step = (current_pct > percent) ? -1 : 1; // Smer zmeny
+     int t_step = LED_RAMPUP_TIME / 100; // Čas jedného kroku v ms
+     bool mqtt_publish_next = true;
 
      while (current_pct != percent) {
           current_pct += step;
           set_led_bright(pct_to_duty(current_pct));
           vTaskDelay(t_step / portTICK_PERIOD_MS);
-     }
 
-     /* MQTT update */
-     if (is_mqtt_connected) {
-          mqtt_send_led(current_pct, led_bright);
+          /* MQTT update (každý druhý krok) */
+          if (is_mqtt_connected && mqtt_publish_next) {
+               mqtt_send_led(current_pct, led_bright);
+          }
+
+          mqtt_publish_next = !mqtt_publish_next;
      }
 }
