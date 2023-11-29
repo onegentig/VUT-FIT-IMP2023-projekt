@@ -16,6 +16,9 @@ const char* PROJNAME = "imp-light";
 /* == Hlavné metódy == */
 
 void setup() {
+     /* Inicializácia NVC */
+     ESP_ERROR_CHECK(nvs_flash_init());
+
      /* Inicializácia I²C kontroléra */
      i2c_config_t i2c_ctrl_cfg = {
           // Kontrolér (master) mód
@@ -34,13 +37,14 @@ void setup() {
      ESP_ERROR_CHECK(i2c_driver_install(I2C_NUM, I2C_MODE_MASTER, 0, 0, 0));
 
      /* Komponenty */
-     init_led();
-
      if (!test_sensor() || !start_sensor()) {
           ESP_LOGE(PROJNAME,
                    "Senzor svetla nebolo možné otestovať alebo zapnúť!");
           return;
      }
+
+     init_led();
+     init_wifi();
 
      ESP_LOGI(PROJNAME, "Hardvér inicializovaný!");
 }

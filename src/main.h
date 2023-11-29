@@ -12,6 +12,8 @@
 
 #include "common.h"
 #include "led.h"
+#include "net_conn.h"
+#include "nvs_flash.h"
 #include "sensor.h"
 
 /* === Definície a globals === */
