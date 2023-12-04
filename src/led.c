@@ -69,7 +69,7 @@ void set_led_bright(uint32_t duty) {
  * @return 10-bitová striada (0 až 1023)
  */
 uint32_t pct_to_duty(uint8_t percent) {
-     uint32_t duty = (uint32_t)((percent * 1024) / 100);
+     uint32_t duty = ((uint32_t)percent * 1024) / 100;
      return (duty > 1023) ? 1023 : duty;
 }
 
@@ -89,8 +89,8 @@ uint8_t duty_to_pct(uint32_t duty) {
  */
 void fade_led_bright(uint8_t percent) {
      uint8_t current_pct = duty_to_pct(led_bright);
-     uint8_t step = (current_pct > percent) ? -1 : 1; // Smer zmeny
-     int t_step = LED_RAMPUP_TIME / 100; // Čas jedného kroku v ms
+     uint8_t step = (current_pct > percent) ? -1 : 1;  // Smer zmeny
+     uint16_t t_step = LED_RAMPUP_TIME / 100;  // Čas jedného kroku v ms
      bool mqtt_publish_next = true;
 
      while (current_pct != percent) {

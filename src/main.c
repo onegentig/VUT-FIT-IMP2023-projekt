@@ -18,8 +18,8 @@ const char* PROJNAME = "implight";
 void setup() {
      /* Inicializácia NVC */
      esp_err_t nvs_status = nvs_flash_init();
-     if (nvs_status == ESP_ERR_NVS_NO_FREE_PAGES ||
-         nvs_status == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+     if (nvs_status == ESP_ERR_NVS_NO_FREE_PAGES
+         || nvs_status == ESP_ERR_NVS_NEW_VERSION_FOUND) {
           ESP_ERROR_CHECK(nvs_flash_erase());
           nvs_status = nvs_flash_init();
      }
@@ -57,8 +57,10 @@ void setup() {
 
 void loop() {
      /* Nastaviť LED podľa senzora */
-     uint16_t light_lux = read_sensor_light(); // Získať vonkajšie svetlo zo senzora
-     uint8_t light_pct = lux_to_pct(light_lux); // Prepočítať na svietivosť LEDky
+     uint16_t light_lux
+         = read_sensor_light();  // Získať vonkajšie svetlo zo senzora
+     uint8_t light_pct
+         = 100 - lux_to_pct(light_lux);  // Prepočítať na svietivosť LEDky
      ESP_LOGI(PROJNAME, "Úroveň svetla: %u lux (%u%%)", light_lux, light_pct);
      fade_led_bright(light_pct);  // Linearizovaná zmena jasu LEDky
 
