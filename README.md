@@ -20,11 +20,12 @@ Zadanie: [ZADANI.md](ZADANI.md), originál [WIS WIKI/MOODLE/StudIS PDF/GitFIT/..
 - [X] Integrácia senzora svetla
 - [X] NVS modul
 - [X] MQTT
-- [ ] Sériová konfigurácia
+  - [X] MQTT ako task, nie loop
+- [ ] SERIAL/UART konfigurácia
 - [ ] Webserver
+- [ ] ⏰ 2023-12-07 **Obhajoba**
 - [ ] ⏰ 2023-12-15 **Deadline**
 
-<!-- Môže-nemusí byť -->
 ### Môže sa hodiť ###
 
 - [ESP-IDF Programming Guide](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/index.html)

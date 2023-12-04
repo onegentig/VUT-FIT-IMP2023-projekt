@@ -98,14 +98,7 @@ uint16_t read_sensor_light() {
           return 0;
      }
 
-     uint16_t data = (data_h << 8) | data_l;  // Spojenie dvoch 8b častí
-
-     /* MQTT update */
-     if (is_mqtt_connected) {
-          mqtt_send_sensor(data);
-     }
-
-     return data;
+     return (data_h << 8) | data_l;  // Spojenie dvoch 8b častí
 }
 
 /**

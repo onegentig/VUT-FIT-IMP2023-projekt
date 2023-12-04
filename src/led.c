@@ -64,6 +64,12 @@ void set_led_bright(uint32_t duty) {
 }
 
 /**
+ * @brief Získa aktuálnu hodnotu striady LEDky
+ * @return 10-bitová striada (0 až 1023)
+ */
+uint32_t get_led_bright() { return led_bright; }
+
+/**
  * @brief Skonvertuje percentáž na 10-bitovú striadu
  * @param percent Percentáž jasu (0 až 100)
  * @return 10-bitová striada (0 až 1023)
@@ -91,18 +97,10 @@ void fade_led_bright(uint8_t percent) {
      uint8_t current_pct = duty_to_pct(led_bright);
      uint8_t step = (current_pct > percent) ? -1 : 1;  // Smer zmeny
      uint16_t t_step = LED_RAMPUP_TIME / 100;  // Čas jedného kroku v ms
-     bool mqtt_publish_next = true;
 
      while (current_pct != percent) {
           current_pct += step;
           set_led_bright(pct_to_duty(current_pct));
           vTaskDelay(t_step / portTICK_PERIOD_MS);
-
-          /* MQTT update (každý druhý krok) */
-          if (is_mqtt_connected && mqtt_publish_next) {
-               mqtt_send_led(current_pct, led_bright);
-          }
-
-          mqtt_publish_next = !mqtt_publish_next;
      }
 }

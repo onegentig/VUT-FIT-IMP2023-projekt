@@ -12,12 +12,11 @@
 
 #include "common.h"
 #include "driver/ledc.h"
-#include "net_conn.h"
 
 /* === Definície a globals === */
 
 #define PORT_LED GPIO_NUM_5
-#define LED_RAMPUP_TIME (uint16_t)(3 * 1000)  // Čas prechodu z 0% na 100% v ms
+#define LED_RAMPUP_TIME (uint16_t)(1 * 1000)  // Čas prechodu z 0% na 100% v ms
 
 extern uint32_t led_bright;
 
@@ -33,6 +32,12 @@ void init_led();
  * @param duty 10bitová striada (0 až 1023)
  */
 void set_led_bright(uint32_t duty);
+
+/**
+ * @brief Získa aktuálnu hodnotu striady LEDky
+ * @return 10-bitová striada (0 až 1023)
+ */
+uint32_t get_led_bright();
 
 /**
  * @brief Skonvertuje percentáž na 10-bitovú striadu
