@@ -13,10 +13,12 @@
 #include "common.h"
 #include "led.h"
 #include "net_conn.h"
-#include "nvs_flash.h"
 #include "sensor.h"
+#include "serial_config.h"
 
 /* === Definície a globals === */
+
+const char* PROJNAME;
 
 /* === Metódy === */
 

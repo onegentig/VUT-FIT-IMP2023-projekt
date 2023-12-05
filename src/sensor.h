@@ -27,8 +27,8 @@
 #define BH1750FVI_ONE_HRES2 0x21   /**< Kód inštr. pre alt. jednorázový režim s vysokým rozl. */
 #define BH1750FVI_ONE_LRES 0x23	/**< Kód inštr. pre jednorázový režim s nízkym rozl. */
 
-#define MIN_LUX 100  /**< Minimálna úroveň svetla (pod => 0%) */
-#define MAX_LUX 4000 /**< Maximálna úroveň svetla (nad => 100%) */
+#define DEFAULT_MIN_LUX 100  /**< Minimálna úroveň svetla (pod => 0%) */
+#define DEFAULT_MAX_LUX 400  /**< Maximálna úroveň svetla (nad => 100%) */
 
 /* === Metódy === */
 

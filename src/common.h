@@ -28,6 +28,18 @@
 
 extern const char *PROJNAME;
 
+/**
+ * @brief Štrukt konfigurácie projektu
+ * @param min_lux Minimálna hodnota svetla (pod => 0%)
+ * @param max_lux Maximálna hodnota svetla (nad => 100%)
+ */
+typedef struct {
+     uint16_t min_lux;
+     uint16_t max_lux;
+} project_config_t;
+
+extern project_config_t project_config;
+
 /* == Časové konštanty == */
 // inšpirované npm modulom "@sapphire/time-utilities"
 

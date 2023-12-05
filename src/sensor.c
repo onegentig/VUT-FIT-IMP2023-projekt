@@ -106,11 +106,13 @@ uint16_t read_sensor_light() {
  * @return uint8_t Úroveň svetla v percentách
  */
 uint8_t lux_to_pct(uint16_t lux) {
-     if (lux <= MIN_LUX) return 0;
-     if (lux >= MAX_LUX) return 100;
+     if (lux <= project_config.min_lux) return 0;
+     if (lux >= project_config.max_lux) return 100;
 
-     uint16_t range = MAX_LUX - MIN_LUX;   // Rozsah hodnôt
-     uint16_t scaled_lux = lux - MIN_LUX;  // Hodnota lux posunutá na MIN=0
+     uint16_t range
+         = project_config.max_lux - project_config.min_lux;  // Rozsah hodnôt
+     uint16_t scaled_lux
+         = lux - project_config.min_lux;  // Hodnota lux posunutá na MIN=0
 
      uint8_t pct = (uint8_t)((scaled_lux * 100) / range);
      return (pct > 100) ? 100 : pct;

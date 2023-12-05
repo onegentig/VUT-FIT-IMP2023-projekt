@@ -11,6 +11,9 @@
 
 const char* PROJNAME = "implight";
 
+project_config_t project_config
+    = {.min_lux = DEFAULT_MIN_LUX, .max_lux = DEFAULT_MAX_LUX};
+
 /* === Metódy === */
 
 /**
@@ -42,13 +45,26 @@ void publish_log_task() {
 
 void setup() {
      /* Inicializácia NVC */
-     esp_err_t nvs_status = nvs_flash_init();
-     if (nvs_status == ESP_ERR_NVS_NO_FREE_PAGES
-         || nvs_status == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-          ESP_ERROR_CHECK(nvs_flash_erase());
-          nvs_status = nvs_flash_init();
+     init_nvs();
+
+     // Konfiguračné hodnoty
+     uint16_t min_lux, max_lux;
+     esp_err_t status = ESP_OK;
+
+     if (read_nvs_u16("min_lux", &min_lux) != ESP_OK) {
+          min_lux = DEFAULT_MIN_LUX;
+          status = write_nvs_u16("min_lux", min_lux);
      }
-     ESP_ERROR_CHECK(nvs_status);
+     ESP_ERROR_CHECK(status);
+
+     if (read_nvs_u16("max_lux", &max_lux) != ESP_OK) {
+          max_lux = DEFAULT_MAX_LUX;
+          status = write_nvs_u16("max_lux", max_lux);
+     }
+     ESP_ERROR_CHECK(status);
+
+     project_config.min_lux = min_lux;
+     project_config.max_lux = max_lux;
 
      /* Inicializácia I²C kontroléra */
      i2c_config_t i2c_ctrl_cfg = {
