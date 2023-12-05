@@ -92,6 +92,7 @@ void setup() {
 
      init_led();
      init_wifi();
+     init_uart();
 
      ESP_LOGI(PROJNAME, "Hardvér inicializovaný!");
 
@@ -108,6 +109,13 @@ void loop() {
          = 100 - lux_to_pct(light_lux);  // Prepočítať na svietivosť LEDky
 
      fade_led_bright(light_pct);  // Linearizovaná zmena jasu LEDky
+
+     /* Spracovať SERIAL comm., ak treba */
+     esp_err_t serial_status = handle_serial();
+     if (serial_status != ESP_OK && serial_status != ESP_WOULDBLOCK) {
+          ESP_LOGE(PROJNAME, "Chyba pri spracovaní SERIAL komunikácie: %s",
+                   esp_err_to_name(serial_status));
+     }
 
      vTaskDelay(500 / portTICK_PERIOD_MS);
 }

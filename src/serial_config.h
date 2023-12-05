@@ -10,13 +10,26 @@
 
 /* === Importy === */
 
+#include <string.h>
+
+#include "common.h"
+#include "driver/uart.h"
+#include "esp_timer.h"
 #include "nvs.h"
 #include "nvs_flash.h"
 
 /* === Definície a globals === */
 
+#define UART_BUF_SIZE 256
 #define NVS_DATA_NAMESPACE "store"
-#define NVS_UNDEFINED ESP_ERR_NVS_NOT_FOUND  // skratka
+#define NVS_UNDEFINED ESP_ERR_NVS_NOT_FOUND  // alias
+#define ESP_WOULDBLOCK ESP_ERR_TIMEOUT       // BSD-style alias
+#define QUIET_TIMEO 30000
+
+extern char serial_buf[UART_BUF_SIZE];
+extern int serial_buf_pos;
+extern int64_t serial_last_recv;
+extern bool is_config;
 
 /* === Metódy === */
 
@@ -44,5 +57,25 @@ esp_err_t write_nvs_u16(const char *key, const uint16_t val);
  * @return ESP_FAIL ak nie
  */
 esp_err_t read_nvs_u16(const char *key, uint16_t *val);
+
+/* == UART == */
+
+/**
+ * @brief Inicializácia UARTu
+ */
+void init_uart();
+
+/**
+ * @brief Neblokujúci handling SERIAL komunikácie cez UART.
+ * @return ESP_OK ak prebehlo úspešne,
+ * @return ESP_FAIL ak nie
+ */
+esp_err_t handle_serial();
+
+/**
+ * @brief Spracuje prijatí príkaz
+ * @param command Prijatý príkaz
+ */
+void handle_command(const char *command);
 
 #endif
