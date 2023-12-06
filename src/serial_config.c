@@ -113,22 +113,24 @@ esp_err_t handle_serial() {
                                100 / pdMS_TO_TICKS(100));
      int64_t time_now = esp_timer_get_time();
 
-     /* Vypnúť tichý mód */
-     if (is_config && (time_now - serial_last_recv > QUIET_TIMEO * 1000)) {
-          is_config = false;
-          esp_log_level_set("*", ESP_LOG_INFO);
-          uart_write_bytes(UART_NUM_0, "quiet timeo, logs reenabled\r\n", 30);
+     /* Počas písania príkazu (aka neprázdny buffer) sú logy vypnuté */
+     if (serial_buf_pos > 0) {
+          esp_log_level_set("*", ESP_LOG_NONE);
+     } else {
+          esp_log_level_set("*", PROJ_LOG_LEVEL);
      }
 
      if (len < 0) return ESP_FAIL;         // Chyba pri čítaní
      if (len == 0) return ESP_WOULDBLOCK;  // Nie je čo spracovať
 
-     /* Spracovať vstup */
+     uart_write_bytes(UART_NUM_0, data, len);  // Echo linky
+     serial_last_recv = time_now;
+
+     /* Spracovanie vstupu */
      for (int i = 0; i < len; i++) {
           if (data[i] == '\n') {
-               // Koniec riadku => koniec príkazu, treba spracovať
+               // Koniec riadku => koniec príkazu
                serial_buf[serial_buf_pos] = '\0';
-               serial_last_recv = time_now;
                handle_command(serial_buf);  // Spracovať príkaz
                serial_buf_pos = 0;          // Buffer reset
                continue;
@@ -147,44 +149,77 @@ esp_err_t handle_serial() {
 }
 
 /**
- * @brief Spracuje prijatí príkaz
- * @param command Prijatý príkaz
+ * @brief Pošle error na sériovú linku (pomocná funkcia pre handle_command)
+ * @param msg Správa
+ */
+void send_uart_err(const char *msg) {
+     char out_buf[64];
+     snprintf(out_buf, sizeof(out_buf), "err: %s", msg);
+     uart_write_bytes(UART_NUM_0, out_buf, strlen(out_buf));
+     uart_write_bytes(UART_NUM_0, "\r\n", 2);  // CR LF
+}
+
+/**
+ * @brief Spracuje prijaý príkaz na sériovú linku
+ * @param command Príkaz
  */
 void handle_command(const char *command) {
-     if (strcmp(command, "q") == 0) {
-          /* Tichý mód */
-          is_config = !is_config;
-          esp_log_level_set("*", is_config ? ESP_LOG_NONE : ESP_LOG_INFO);
-          uart_write_bytes(UART_NUM_0,
-                           is_config ? "ok, supressed" : "ok, reenabled", 14);
-     } else if (strcmp(command, "min") == 0) {
-          /* Minimálna svietivosť */
-          uint16_t min_lux = 0;
-          esp_err_t status = read_nvs_u16("min_lux", &min_lux);
-          if (status != ESP_OK) {
-               uart_write_bytes(UART_NUM_0, "err", 3);
-               return;
-          }
+     char cmd[16], arg[16];
+     uint8_t n_parts = sscanf(command, "%15s %15s", cmd, arg);
 
-          char buf[16];
-          sprintf(buf, "min: %d", min_lux);
-          uart_write_bytes(UART_NUM_0, buf, strlen(buf));
-     } else if (strcmp(command, "max") == 0) {
-          /* Maximálna svietivosť */
-          uint16_t max_lux = 0;
-          esp_err_t status = read_nvs_u16("max_lux", &max_lux);
-          if (status != ESP_OK) {
-               uart_write_bytes(UART_NUM_0, "err", 3);
-               return;
-          }
+     if (n_parts == 0 || n_parts == EOF)
+          return send_uart_err("no cmd/parse err");
 
-          char buf[16];
-          sprintf(buf, "max: %d", max_lux);
-          uart_write_bytes(UART_NUM_0, buf, strlen(buf));
+     char out_buf[64];  // Výstupný buffer
+
+     /* Handler príkazu */
+     if (strcmp(cmd, "min") == 0) {
+          if (n_parts == 2) {
+               /* Nastavenie nového MIN_LUX */
+               // Parse a kontrola hodnoty
+               uint16_t val;
+               if (sscanf(arg, "%hu", &val) != 1)
+                    return send_uart_err("arg is nan");
+               if (val > project_config.max_lux)
+                    return send_uart_err("min > max");
+
+               // Zápis
+               esp_err_t status = write_nvs_u16("min_lux", val);
+               if (status != ESP_OK)
+                    return send_uart_err(esp_err_to_name(status));
+
+               snprintf(out_buf, sizeof(out_buf), "ok");
+               project_config.min_lux = val;
+          } else {
+               /* Výpis aktuálneho MIN_LUX */
+               snprintf(out_buf, sizeof(out_buf), "%d", project_config.min_lux);
+          }
+     } else if (strcmp(cmd, "max") == 0) {
+          if (n_parts == 2) {
+               /* Nastavenie nového MAX_LUX */
+               // Parse a kontrola hodnoty
+               uint16_t val;
+               if (sscanf(arg, "%hu", &val) != 1)
+                    return send_uart_err("arg is nan");
+               if (val < project_config.min_lux)
+                    return send_uart_err("max < min");
+
+               // Zápis
+               esp_err_t status = write_nvs_u16("max_lux", val);
+               if (status != ESP_OK)
+                    return send_uart_err(esp_err_to_name(status));
+
+               snprintf(out_buf, sizeof(out_buf), "ok");
+               project_config.max_lux = val;
+          } else {
+               /* Výpis aktuálneho MAX_LUX */
+               snprintf(out_buf, sizeof(out_buf), "%d", project_config.max_lux);
+          }
      } else {
-          uart_write_bytes(UART_NUM_0, "???", 3);
+          snprintf(out_buf, sizeof(out_buf), "???");
      }
 
-     // CR LF
-     uart_write_bytes(UART_NUM_0, "\r\n", 2);
+     /* Odpoveď na sériovú linku */
+     uart_write_bytes(UART_NUM_0, out_buf, strlen(out_buf));
+     uart_write_bytes(UART_NUM_0, "\r\n", 2);  // CR LF
 }

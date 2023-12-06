@@ -25,6 +25,7 @@
 #define PORT_I2C_CLOCK GPIO_NUM_22
 #define I2C_FREQ_HZ 400000
 #define I2C_NUM I2C_NUM_0
+#define PROJ_LOG_LEVEL ESP_LOG_INFO
 
 extern const char *PROJNAME;
 
