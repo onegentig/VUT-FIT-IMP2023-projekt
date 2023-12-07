@@ -2,29 +2,12 @@
 
 *Projekt (Spínanie svetla podľa intenzity) z predmetu Mikroprocesorové a vstavané systémy (IMP), tretí semester bakalárskeho štúdia BIT na FIT VUT/BUT, ak.rok 2023/2024*
 
-🔒 **Aktívny súkromný repozitár — nezverejňovať!**
-<!-- 🗄️ **Súkromný archivovaný repozitár!** -->
-<!-- ⚠️ **Zverejnené pre archívne účely — nekopírujte, nula by Vás mrzela. Za nič také nenesiem žiadnu zodpovednosť!** Všetky odovzdané projekty prechádzajú kontrolou plagiátorstva, pri ktorej sa porovnávajú aj s dávnejšie odovzdanými riešeniami. -->
+⚠️ **Zverejnené pre archívne účely — nekopírujte, nula by Vás mrzela. Za nič také nenesiem žiadnu zodpovednosť!** Všetky odovzdané projekty prechádzajú kontrolou plagiátorstva, pri ktorej sa porovnávajú aj s dávnejšie odovzdanými riešeniami.
 <br />
 
-Hodnotenie: ?? / 14<br />（?）
+Hodnotenie: 14 / 14<br />（HW <img alt=":vutEZ:" src="https://cdn.discordapp.com/emojis/650288381476995102.png" height="16px" />）
 
-Zadanie: [ZADANI.md](ZADANI.md), originál [WIS WIKI/MOODLE/StudIS PDF/GitFIT/...](https://www.vut.cz/)
-
-### TODO-List ###
-
-- [X] ⏰ 2023-10-02 **Zadanie**
-- [X] ⏰ 2023-10-06 **Registrácia**
-- [X] Spojazniť IDE s ESP-IDF, rozblikať LEDku
-- [X] Linearizácia zmeny svitu LEDky
-- [X] Integrácia senzora svetla
-- [X] NVS modul
-- [X] MQTT
-  - [X] MQTT ako task, nie loop
-- [ ] SERIAL/UART konfigurácia
-- [ ] Webserver
-- [ ] ⏰ 2023-12-07 **Obhajoba**
-- [ ] ⏰ 2023-12-15 **Deadline**
+Zadanie: [ZADANI.md](ZADANI.md), originál [StudIS](https://www.vut.cz/studis/student.phtml?sn=zadani_detail&apid=268243&zid=54973)
 
 ### Môže sa hodiť ###
 
